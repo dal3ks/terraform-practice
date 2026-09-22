@@ -1,6 +1,18 @@
+/*
+{
+username: string
+roles: string[]}
+
+Objects are easier to access as: {username => roles}
+*/
+
 locals {
   users_from_yaml = yamldecode(file("${path.module}/user-roles.yaml")).users
+  users_map = {
+    for user_config in local.users_from_yaml : user_config.username => user_config.roles
+  }
 }
+
 
 resource "aws_iam_user" "users" {
   for_each = toset(local.users_from_yaml[*].username)
@@ -27,3 +39,4 @@ output "passwords" {
   for user, user_login in aws_iam_user_login_profile.users : user => user_login.password }
   sensitive = true
 }
+
