@@ -34,10 +34,9 @@ output "policies" {
 
 # Get the current AWS account ID so we don't hardcode it into user ARNs
 data "aws_caller_identity" "current" {}
-/*
-1. We must iterate over the exisiting roles and create a different assume role policy for each of them
-2. In each role policy, under identifiers add only the users that have that specific listed in their roles list
-*/
+
+# Create a trust policy for each role
+# Only allow users assigned that role to assume it
 
 data "aws_iam_policy_document" "assume_role_policy" {
   for_each = toset(keys(local.role_policies))
@@ -70,7 +69,9 @@ data "aws_iam_policy" "managed_policies" {
 
 }
 
-# Attach each AWS-managed policy to its corresponding IAM role
+# Create one attachment for every role/policy pair
+# count.index selects the matching pair from role_policies_list
+
 resource "aws_iam_role_policy_attachment" "role_policy_attachments" {
   count      = length(local.role_policies_list)
   role       = aws_iam_role.roles[local.role_policies_list[count.index].role].name
