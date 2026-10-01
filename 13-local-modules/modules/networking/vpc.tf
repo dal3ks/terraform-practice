@@ -5,3 +5,14 @@ resource "aws_vpc" "this" {
     Name = var.vpc_config.name
   }
 }
+
+resource "aws_subnet" "this" {
+  for_each          = var.subnet_config
+  vpc_id            = aws_vpc.this.id
+  availability_zone = each.value.az
+  cidr_block        = each.value.cidr_block
+
+  tags = {
+    Name = each.key
+  }
+}
