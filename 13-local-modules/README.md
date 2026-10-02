@@ -4,5 +4,7 @@ A networking module that should:
 2. Allow the user to provide the configuration for multiple subnets:
     2.1 [DONE]The user should be able to provide CIDR blocks
     2.2 [DONE]The user should be able to provide AWS AZs
-    2.3 The user should be able to mark a subnet as public or private
+    2.3 The user should be able to mark a subnet as public or private:
+        2.3.1 If at least 1 subnet is public, we need to deploy an IGW
+        2.3.2 We need to associate public subnets with public route table
     
