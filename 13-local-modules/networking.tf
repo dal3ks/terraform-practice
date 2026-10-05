@@ -15,5 +15,16 @@ module "vpc" {
       az         = "eu-west-2b"
       public     = true
     }
+
+    subnet_3 = {
+      cidr_block = "10.0.2.0/24"
+      az         = "eu-west-2c"
+      public     = true
+    }
+
+    subnet_4 = {
+      cidr_block = "10.0.3.0/24"
+      az         = "eu-west-2a"
+    }
   }
 }
