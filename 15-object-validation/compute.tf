@@ -3,9 +3,8 @@ locals {
 }
 
 data "aws_ami" "ubuntu" {
-
   most_recent = true
-  owners      = ["099720109477"] # Owner is Canonical  
+  owners      = ["099720109477"] # Canonical
 
   filter {
     name   = "name"
@@ -18,11 +17,11 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-
 resource "aws_instance" "this" {
   ami                         = data.aws_ami.ubuntu.id
   associate_public_ip_address = true
   instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.this.id
 
   root_block_device {
     delete_on_termination = true
@@ -31,10 +30,10 @@ resource "aws_instance" "this" {
   }
 
   lifecycle {
-    precondition {
-      condition     = contains(local.allowed_instance_types, var.instance_type)
-      error_message = "Invalid instance type"
+    create_before_destroy = true
+    postcondition {
+      condition     = contains(local.allowed_instance_types, self.instance_type)
+      error_message = "Self invalid instance type"
     }
   }
-
 }
