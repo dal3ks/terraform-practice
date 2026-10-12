@@ -4,17 +4,7 @@ resource "aws_s3_bucket" "remote_state" {
 
   tags = {
     ManagedBy = "Terraform"
-    Lifecycle = "Critical"
   }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-import {
-  to = aws_s3_bucket_public_access_block.remote_state
-  id = aws_s3_bucket.remote_state.bucket
 }
 
 
