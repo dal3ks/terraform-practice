@@ -22,6 +22,19 @@ data "aws_subnet" "input" {
             Please do not deploy RDS instances in the default VPC.
             EOT
     }
+
+    postcondition {
+      condition     = can(lower(self.tags.Access) == "private")
+      error_message = <<-EOT
+      The following subnet is not marked as private:
+
+            Name = ${self.tags.Name}
+            ID = ${self.id}
+
+            Please ensure the subnet is properly tagged by adding the following tags:
+            1. Access = "private"
+            EOT
+    }
   }
 }
 
