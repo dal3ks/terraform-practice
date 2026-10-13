@@ -15,5 +15,11 @@ terraform {
 
 provider "aws" {
   region = "eu-west-2"
+  default_tags {
+    tags = {
+      ManagedBy = "Terraform"
+      Project   = "proj03-import-lambda"
+    }
+  }
 
 }

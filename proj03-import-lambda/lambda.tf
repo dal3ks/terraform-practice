@@ -22,9 +22,21 @@ resource "aws_lambda_function" "this" {
   }
   logging_config {
     log_format = "Text"
-    log_group  = "/aws/lambda/mannually-created-lambda"
+    log_group  = aws_cloudwatch_log_group.lambda.name
   }
   tracing_config {
     mode = "PassThrough"
   }
+}
+
+resource "aws_lambda_function_url" "this" {
+  function_name      = aws_lambda_function.this.function_name
+  authorization_type = "NONE"
+}
+
+resource "aws_lambda_permission" "function_url_invoke_function" {
+  statement_id  = "FunctionURLAllowPublicAccessInvokeFunction"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.this.function_name
+  principal     = "*"
 }
