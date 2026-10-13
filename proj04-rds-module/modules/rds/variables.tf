@@ -1,10 +1,19 @@
+########################
+# General information
+########################
+
 variable "project_name" {
-  type = string
+  type        = string
+  description = "The project name. Used to name the RDS instance and add relevant tags"
 }
 
+########################
+# DB Configuration
+########################
 variable "instance_class" {
-  type    = string
-  default = "db.t3.micro"
+  type        = string
+  default     = "db.t3.micro"
+  description = "The instance class used to create the database. Requires a free-tier instance class."
 
   validation {
     condition     = contains(["db.t3.micro"], var.instance_class)
@@ -13,8 +22,9 @@ variable "instance_class" {
 }
 
 variable "storage_size" {
-  type    = number
-  default = 10
+  type        = number
+  default     = 10
+  description = "The amount of storage to allocate to the database should be between 5GB and 10GB."
   validation {
     condition     = var.storage_size >= 5 && var.storage_size <= 10
     error_message = "DB storage must be between 5GB and 10GB"
@@ -22,14 +32,20 @@ variable "storage_size" {
 }
 
 variable "engine" {
-  type    = string
-  default = "postgres-latest"
+  type        = string
+  default     = "postgres-latest"
+  description = "Which engine to use for the database. Currently only postgres is supported."
 
   validation {
     condition     = contains(["postgres-latest", "postgres-14"], var.engine)
-    error_message = "DB enginer must be postgres-latest or postgres-14"
+    error_message = "DB engine must be postgres-latest or postgres-14"
   }
 }
+
+
+########################
+# DB Credentials
+########################
 
 variable "credentials" {
   type = object({
@@ -37,7 +53,8 @@ variable "credentials" {
     password = string
   })
 
-  sensitive = true
+  sensitive   = true
+  description = "The root username and password for the database creation"
 
   validation {
     condition = (
@@ -53,4 +70,19 @@ variable "credentials" {
     4. Contain only the following characters: a-z, A-Z, 0-9, +, _ , ?, -
     EOT
   }
+}
+
+
+########################
+# DB Network
+########################
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnet IDs to deploy the RDS instance in"
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "Security group IDs to attach to the RDS instance."
 }
