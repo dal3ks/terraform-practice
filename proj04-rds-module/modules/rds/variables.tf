@@ -60,7 +60,7 @@ variable "credentials" {
     condition = (
       length(regexall("[a-zA-Z]+", var.credentials.password)) > 0
       && length(regexall("[0-9]+", var.credentials.password)) > 0
-      && length(regexall("^[a-zA-Z0-9+_?-]{6,}$", var.credentials.password)) > 0
+      && length(regexall("^[a-zA-Z0-9+_?-]{8,}$", var.credentials.password)) > 0
     )
     error_message = <<-EOT
     Password must comply with the following format:
