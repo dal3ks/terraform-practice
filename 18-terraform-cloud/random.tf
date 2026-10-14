@@ -3,5 +3,5 @@ resource "random_id" "this" {
 }
 
 output "random_id" {
-    value = random_id.this.hex
+  value = random_id.this.hex
 }
